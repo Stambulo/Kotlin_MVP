@@ -2,33 +2,54 @@ package com.stambulo.kotlinlibs
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import com.stambulo.kotlinlibs.MVP.Presenter.Presenter
-import com.stambulo.kotlinlibs.MVP.View.MainView
+import android.os.PersistableBundle
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), MainView {
-    val presenter = Presenter(this)
+class MainActivity : AppCompatActivity() {
+
+    val counters = mutableListOf(0, 0, 0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val listener = View.OnClickListener {
-            presenter.counterClick(it.id)
+        btn_counter1.setOnClickListener {
+            btn_counter1.text = (++counters[0]).toString()
         }
 
-        btn_counter1.setOnClickListener(listener)
-        btn_counter2.setOnClickListener(listener)
-        btn_counter3.setOnClickListener(listener)
+        btn_counter2.setOnClickListener {
+            btn_counter2.text = (++counters[1]).toString()
+        }
+
+        btn_counter3.setOnClickListener {
+            btn_counter3.text = (++counters[2]).toString()
+        }
+
+        initViews()
     }
 
-    //Подсказка к ПЗ: поделить на 3 отдельные функции и избавиться от index
-    override fun setButtonText(index: Int, text: String) {
-        when(index){
-            0 -> btn_counter1.text = text
-            1 -> btn_counter2.text = text
-            2 -> btn_counter3.text = text
+    fun initViews(){
+        btn_counter1.text = counters[0].toString()
+        btn_counter2.text = counters[1].toString()
+        btn_counter3.text = counters[2].toString()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putIntArray("counters", counters.toIntArray())
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        outState.putIntArray("counters", counters.toIntArray())
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val countersArray = savedInstanceState.getIntArray("counters")
+        countersArray?.toList()?.let {
+            counters.clear()
+            counters.addAll(it)
         }
+        initViews()
     }
 }
