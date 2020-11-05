@@ -15,7 +15,11 @@ class MainActivity : AppCompatActivity(), MainView {
         setContentView(R.layout.activity_main)
 
         val listener = View.OnClickListener {
-            presenter.counterClick(it.id)
+            when(it.id){
+                R.id.btn_counter1 -> {presenter.counterOneClick()}
+                R.id.btn_counter2 -> {presenter.counterTwoClick()}
+                R.id.btn_counter3 -> {presenter.counterTreeClick()}
+            }
         }
 
         btn_counter1.setOnClickListener(listener)
@@ -23,12 +27,15 @@ class MainActivity : AppCompatActivity(), MainView {
         btn_counter3.setOnClickListener(listener)
     }
 
-    //Подсказка к ПЗ: поделить на 3 отдельные функции и избавиться от index
-    override fun setButtonText(index: Int, text: String) {
-        when(index){
-            0 -> btn_counter1.text = text
-            1 -> btn_counter2.text = text
-            2 -> btn_counter3.text = text
-        }
+    override fun setButtonOneText(text: String){
+        btn_counter1.text = text
+    }
+
+    override fun setButtonTwoText(text: String) {
+        btn_counter2.text = text
+    }
+
+    override fun setButtonTreeText(text: String) {
+        btn_counter3.text = text
     }
 }
